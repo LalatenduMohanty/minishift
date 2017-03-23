@@ -72,8 +72,8 @@ const (
 	noProxyList = "no-proxy"
 
 	// Subscription Manager (username/password)
-	username = "username"
-	password = "password"
+	//username = "username"
+	//password = "password"
 )
 
 var (
@@ -109,7 +109,7 @@ var clusterUpFlagSet = flag.NewFlagSet(commandName, flag.ContinueOnError)
 var proxyFlagSet = flag.NewFlagSet(commandName, flag.ContinueOnError)
 
 // subscription Manager FlagSet contains username and password details
-var subscriptionManagerFlagSet = flag.NewFlagSet(commandName, flag.ContinueOnError)
+//var subscriptionManagerFlagSet = flag.NewFlagSet(commandName, flag.ContinueOnError)
 
 // minishiftToClusterUp is a mapping between falg names used in minishift CLI and flag name as passed to 'cluster up'
 var minishiftToClusterUp = map[string]string{
@@ -135,7 +135,7 @@ func runStart(cmd *cobra.Command, args []string) {
 	setDockerProxy()
 	setOcProxy()
 	setShellProxy()
-	setSubcriptionManagerParameters()
+	//setSubcriptionManagerParameters()
 
 	config := cluster.MachineConfig{
 		MinikubeISO:      viper.GetString(isoURL),
@@ -262,12 +262,12 @@ func init() {
 	initStartFlags()
 	initClusterUpFlags()
 	initProxyFlags()
-	initSubscriptionManagerFlags()
+	//initSubscriptionManagerFlags()
 
 	startCmd.Flags().AddFlagSet(startFlagSet)
 	startCmd.Flags().AddFlagSet(clusterUpFlagSet)
 	startCmd.Flags().AddFlagSet(proxyFlagSet)
-	startCmd.Flags().AddFlagSet(subscriptionManagerFlagSet)
+	//startCmd.Flags().AddFlagSet(subscriptionManagerFlagSet)
 
 	viper.BindPFlags(startCmd.Flags())
 	RootCmd.AddCommand(startCmd)
@@ -312,10 +312,10 @@ func initProxyFlags() {
 }
 
 // initProxyFlags create the CLI flags which needs to be passed for proxy
-func initSubscriptionManagerFlags() {
-	subscriptionManagerFlagSet.String(username, "", "Username for the virtual machine registration.")
-	subscriptionManagerFlagSet.String(password, "", "Password for the virtual machine registration.")
-}
+//func initSubscriptionManagerFlags() {
+//	subscriptionManagerFlagSet.String(username, "", "Username for the virtual machine registration.")
+//	subscriptionManagerFlagSet.String(password, "", "Password for the virtual machine registration.")
+//}
 
 // clusterUp downloads and installs the oc binary in order to run 'cluster up'
 func clusterUp(config *cluster.MachineConfig, ip string) {
@@ -414,7 +414,7 @@ func ocSupportFlag(cmdName string, flag string) bool {
 	return false
 }
 
-func setSubcriptionManagerParameters() {
-	cluster.RegistrationParameters.Username = viper.GetString("username")
-	cluster.RegistrationParameters.Password = viper.GetString("password")
-}
+//func setSubcriptionManagerParameters() {
+//	cluster.RegistrationParameters.Username = viper.GetString("username")
+//	cluster.RegistrationParameters.Password = viper.GetString("password")
+//}

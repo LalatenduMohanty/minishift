@@ -103,9 +103,9 @@ func StartHost(api libmachine.API, config MachineConfig) (*host.Host, error) {
 		return nil, fmt.Errorf("Error configuring authorization on host: %s", err)
 	}
 
-	if err := registration.RegisterHostVM(h, RegistrationParameters); err != nil {
-		return nil, fmt.Errorf("Error registering the VM: %s", err)
-	}
+	//if err := registration.RegisterHostVM(h, RegistrationParameters); err != nil {
+	//	return nil, fmt.Errorf("Error registering the VM: %s", err)
+	//}
 
 	return h, nil
 }
@@ -117,9 +117,9 @@ func StopHost(api libmachine.API) error {
 		return err
 	}
 
-	if err = unregister(host); err != nil {
-		return err
-	}
+	//if err = unregister(host); err != nil {
+	//	return err
+	//}
 
 	if err := host.Stop(); err != nil {
 		return err
@@ -134,9 +134,9 @@ func DeleteHost(api libmachine.API) error {
 		return err
 	}
 
-	if err = unregister(host); err != nil {
-		return err
-	}
+	//if err = unregister(host); err != nil {
+	//	return err
+	//}
 
 	m := util.MultiError{}
 	m.Collect(host.Driver.Remove())
@@ -344,9 +344,9 @@ func createHost(api libmachine.API, config MachineConfig) (*host.Host, error) {
 		}
 	}
 
-	if err := registration.RegisterHostVM(h, RegistrationParameters); err != nil {
-		return nil, fmt.Errorf("Error registering the VM: %s", err)
-	}
+	//if err := registration.RegisterHostVM(h, RegistrationParameters); err != nil {
+	//	return nil, fmt.Errorf("Error registering the VM: %s", err)
+	//}
 
 	return h, nil
 }
