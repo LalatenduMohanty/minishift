@@ -18,17 +18,19 @@ package parser
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/minishift/minishift/pkg/minishift/addon/command"
 	"github.com/pkg/errors"
-	"strings"
 )
 
 const (
-	dockerCommand    = "docker"
-	ocCommand        = "oc"
-	openShiftCommand = "openshift"
-	sleepCommand     = "sleep"
-	sshCommand       = "ssh"
+	dockerCommand            = "docker"
+	ocCommand                = "oc"
+	openShiftCommand         = "openshift"
+	sleepCommand             = "sleep"
+	sshCommand               = "ssh"
+	waitForDeploymentCommand = "waitForDeployment"
 )
 
 type CommandHandler interface {
@@ -114,6 +116,17 @@ type SSHCommandHandler struct {
 func (c *SSHCommandHandler) Parse(s string) command.Command {
 	if strings.HasPrefix(s, sshCommand) {
 		return command.NewSshCommand(s)
+	}
+	return nil
+}
+
+type WaitForDeploymentCommandHandler struct {
+	*defaultCommandHandler
+}
+
+func (c *WaitForDeploymentCommandHandler) Parse(s string) command.Command {
+	if strings.HasPrefix(s, waitForDeploymentCommand) {
+		return command.NewWaitForDeploymentCommand(s)
 	}
 	return nil
 }
