@@ -82,12 +82,13 @@ Scenario: User should be able to switch between non existing profiles
       Then stdout should contain
       """
       Profile 'abc' set as active profile
+
       """
     When executing "minishift profile set minishift" succeeds
       Then stdout should contain
       """
-      oc cli context could not changed for 'minishift'. Make sure the profile is in running state or restart if the problem persists.
       Profile 'minishift' set as active profile
+      No oc CLI context is activated for profile, because the 'minishift' VM does not exist or is not running. Run 'minishift start' first.
       """
 Scenario: User should not be able to create profile with blank profile name
     When executing "minishift profile set"

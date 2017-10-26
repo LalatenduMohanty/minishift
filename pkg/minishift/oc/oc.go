@@ -18,17 +18,19 @@ package oc
 
 import (
 	"fmt"
+
 	"github.com/minishift/minishift/pkg/minikube/constants"
 	"github.com/minishift/minishift/pkg/util"
 
 	"bytes"
-	"github.com/minishift/minishift/pkg/util/cmd"
-	"github.com/minishift/minishift/pkg/util/filehelper"
-	"github.com/pkg/errors"
 	"io"
 	"os"
 	"regexp"
 	"strings"
+
+	"github.com/minishift/minishift/pkg/util/cmd"
+	"github.com/minishift/minishift/pkg/util/filehelper"
+	"github.com/pkg/errors"
 )
 
 const (
