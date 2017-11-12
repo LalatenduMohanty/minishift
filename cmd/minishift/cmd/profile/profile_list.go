@@ -27,15 +27,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var profileListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "Lists profiles.",
-	Long:  "Lists the existing profiles.",
-	Run: func(cmd *cobra.Command, args []string) {
-		profiles := profileActions.GetProfileList()
-		displayProfiles(profiles)
-	},
-}
+var (
+	profileListCmd = &cobra.Command{
+		Use:   "list",
+		Short: "Lists profiles.",
+		Long:  "Lists the existing profiles.",
+		Run: func(cmd *cobra.Command, args []string) {
+			if listActiveProfile {
+				fmt.Println(profileActions.GetActiveProfile())
+			} else {
+				profiles := profileActions.GetProfileList()
+				displayProfiles(profiles)
+			}
+		},
+	}
+	listActiveProfile bool
+)
 
 func displayProfiles(profiles []string) {
 	display := new(tabwriter.Writer)
@@ -55,5 +62,6 @@ func displayProfiles(profiles []string) {
 }
 
 func init() {
+	profileListCmd.Flags().BoolVar(&listActiveProfile, "active", false, "Prints the active profile.")
 	ProfileCmd.AddCommand(profileListCmd)
 }
