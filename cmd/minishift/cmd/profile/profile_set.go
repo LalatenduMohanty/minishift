@@ -38,11 +38,13 @@ func runProfile(cmd *cobra.Command, args []string) {
 	validateArgs(args)
 	profileName := args[0]
 
-	//need to check if the current active profile has a VM
+	// Unset the OC CLI context if present for the active profile
 	if cmdUtil.DoesVMExist(config.AllInstancesConfig.ActiveProfile) {
-		err := unsetCurrentOcContext()
+		err := cmdUtil.RemoveCurrentContext()
 		if err != nil {
-			fmt.Println(err.Error())
+			if glog.V(2) {
+				fmt.Println(fmt.Sprintf("%s", err.Error()))
+			}
 		}
 	}
 
@@ -68,17 +70,6 @@ func runProfile(cmd *cobra.Command, args []string) {
 		fmt.Printf("Profile '%s' set as active profile\n", profileName)
 	}
 
-}
-
-func unsetCurrentOcContext() error {
-	err := cmdUtil.RemoveCurrentContext()
-	if err != nil {
-		if glog.V(2) {
-			fmt.Println(fmt.Sprintf("%s", err.Error()))
-		}
-		return err
-	}
-	return nil
 }
 
 func init() {

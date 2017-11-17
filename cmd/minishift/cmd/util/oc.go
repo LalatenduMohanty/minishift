@@ -17,8 +17,11 @@ limitations under the License.
 package util
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/docker/machine/libmachine"
@@ -75,7 +78,14 @@ func SetOcContext(profileName string) error {
 		return errors.New(fmt.Sprintf("Error getting the IP address: '%s'", err.Error()))
 	}
 
-	ocPath := GetOcPath(profileName)
+	err, ocPath := GetOcPath(profileName)
+	if err != nil {
+		return errors.New(fmt.Sprintf("Error getting the oc path for profile '%s'", profileName))
+		if glog.V(2) {
+			fmt.Println(fmt.Sprintf("%s", err.Error()))
+		}
+	}
+
 	ocRunner, err := oc.NewOcRunner(ocPath, kubeConfigPath)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Error during setting '%s' as active profile: %s", profileName, err.Error()))
@@ -108,11 +118,23 @@ func RemoveCurrentContext() error {
 	return nil
 }
 
-func GetOcPath(profileName string) string {
+func GetOcPath(profileName string) (error, string) {
 	instanceConfigFile := filepath.Join(constants.GetProfileHomeDir(), "machines", profileName+".json")
-	instanceConfig, err := minishiftConfig.NewInstanceConfig(instanceConfigFile)
-	if err != nil {
-		atexit.ExitWithMessage(1, err.Error())
+	//Check if the file exists
+	_, err := os.Stat(instanceConfigFile)
+	if os.IsNotExist(err) {
+		return nil, ""
 	}
-	return instanceConfig.OcPath
+	raw, err := ioutil.ReadFile(instanceConfigFile)
+	if err != nil {
+		return err, ""
+	}
+
+	var instanceCfg = minishiftConfig.InstanceConfigType{}
+	err = json.Unmarshal(raw, &instanceCfg)
+	if err != nil {
+		fmt.Println(err.Error())
+		return err, ""
+	}
+	return nil, instanceCfg.OcPath
 }
