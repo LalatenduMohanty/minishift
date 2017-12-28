@@ -47,6 +47,11 @@ type Minishift struct {
 	runner util.MinishiftRunner
 }
 
+func (m *Minishift) shouldWait(waitTime int) error {
+	time.Sleep(time.Duration(waitTime) * time.Second)
+	return nil
+}
+
 func (m *Minishift) shouldHaveState(expected string) error {
 	actual := m.runner.GetStatus()
 	if !strings.Contains(actual, expected) {

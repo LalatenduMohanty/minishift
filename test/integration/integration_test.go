@@ -159,6 +159,7 @@ func FeatureContext(s *godog.Suite) {
 
 	minishift = &Minishift{runner: runner}
 
+	s.Step(`^I wait for (\d+) seconds$`, minishift.shouldWait)
 	// steps to execute `minishift` commands
 	s.Step(`^Minishift (?:has|should have) state "(Does Not Exist|Running|Stopped)"$`,
 		minishift.shouldHaveState)

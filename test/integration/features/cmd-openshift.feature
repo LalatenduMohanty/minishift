@@ -33,7 +33,9 @@ cluster in VM provided by Minishift.
        And stdout of command "minishift ssh -- "docker inspect --format={{.State.FinishedAt}} origin"" is not equal to "0001-01-01T00:00:00Z"
 
   Scenario: User deploys nodejs example application from OpenShift repository
-      When executing "oc new-app https://github.com/openshift/nodejs-ex -l name=myapp" succeeds
+      # Wait for sometime till OpenShift restarted properly
+      When I wait for 10 seconds
+       And executing "oc new-app https://github.com/openshift/nodejs-ex -l name=myapp" succeeds
       Then stdout should contain
       """
       Run 'oc status' to view your app.

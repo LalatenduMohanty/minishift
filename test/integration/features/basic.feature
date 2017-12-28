@@ -145,6 +145,7 @@ Feature: Basic
      And executing "oc new-app centos/ruby-22-centos7~https://github.com/openshift/ruby-ex.git" succeeds
      And services "ruby-ex" rollout successfully
      And executing "oc expose svc/ruby-ex" succeeds
+     And I wait for 5 seconds
     Then status code of HTTP request to "/" of service "ruby-ex" in namespace "ruby" is equal to "200"
      And body of HTTP request to "/" of service "ruby-ex" in namespace "ruby" contains "Welcome to your Ruby application on OpenShift"
 
