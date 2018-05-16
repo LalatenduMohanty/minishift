@@ -171,6 +171,9 @@ type MachineConfig struct {
 	RegistryMirror   []string
 	HostOnlyCIDR     string // Only used by the virtualbox driver
 	ShellProxyEnv    string // Only used for proxy purpose
+	IPAddress        string // Only for generic driver
+	SSHUser          string // Only for generic driver
+	SSHKeyToConnect  string // Only for generic driver
 }
 
 func engineOptions(config MachineConfig) *engine.Options {
@@ -334,7 +337,7 @@ func createHost(api libmachine.API, config MachineConfig) (*host.Host, error) {
 
 	h, err := api.NewHost(config.VMDriver, rawDriver)
 	if err != nil {
-		return nil, fmt.Errorf("Error creating new host: %s", err)
+		return nil, fmt.Errorf("Here->Error creating new host: %s", err)
 	}
 
 	h.HostOptions.AuthOptions.CertDir = constants.Minipath
@@ -379,6 +382,8 @@ func getDriverOptions(config MachineConfig) interface{} {
 		driver = createHypervHost(config)
 	case "hyperkit":
 		driver = createHyperkitHost(config)
+	case "generic":
+		driver = createGenericDriverConfig(config)
 	default:
 		atexit.ExitWithMessage(1, fmt.Sprintf("Unsupported driver: %s", config.VMDriver))
 	}

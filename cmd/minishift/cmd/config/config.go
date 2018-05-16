@@ -70,6 +70,10 @@ var (
 	PublicHostname    = createConfigSetting("public-hostname", SetString, nil, nil, true, nil)
 	RoutingSuffix     = createConfigSetting("routing-suffix", SetString, nil, nil, true, nil)
 	ServerLogLevel    = createConfigSetting("server-loglevel", SetInt, []setFn{validations.IsPositive}, nil, true, nil)
+	OpenshiftEnv      = createConfigSetting("openshift-env", nil, nil, nil, false, nil)
+	IP                = createConfigSetting("ip", SetString, []setFn{validations.IsValidIPv4Address}, nil, true, nil)
+	SSHKeyToConnect   = createConfigSetting("rsa-key", SetString, nil, nil, true, nil)
+	SSHUser           = createConfigSetting("ssh-username", SetString, nil, nil, true, nil)
 
 	// future enabled flags
 	ExtraClusterUpFlags = createConfigSetting("extra-clusterup-flags", SetString, nil, nil, true, nil)

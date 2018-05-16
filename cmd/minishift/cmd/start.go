@@ -189,7 +189,7 @@ func runStart(cmd *cobra.Command, args []string) {
 	// Adding active profile information to all instance config
 	addActiveProfileInformation()
 
-	ip, _ := hostVm.Driver.GetIP()
+	ip := getIPAddress(hostVm.Driver)
 
 	if proxyConfig.IsEnabled() {
 		// once we know the IP, we need to make sure it is not proxied in a proxy environment
@@ -362,6 +362,9 @@ func startHost(libMachineClient *libmachine.Client) *host.Host {
 		RegistryMirror:   getSlice(configCmd.RegistryMirror.Name),
 		HostOnlyCIDR:     viper.GetString(configCmd.HostOnlyCIDR.Name),
 		ShellProxyEnv:    shellProxyEnv,
+		IPAddress:        viper.GetString(configCmd.IPAddress.Name),
+		SSHUser:          viper.GetString(configCmd.SSHUser.Name),
+		SSHKeyToConnect:  viper.GetString(configCmd.SSHKeyToConnect.Name),
 	}
 	minishiftConfig.InstanceConfig.VMDriver = machineConfig.VMDriver
 	minishiftConfig.InstanceConfig.Write()
@@ -598,6 +601,9 @@ func initStartFlags() *flag.FlagSet {
 	startFlagSet.AddFlag(registryMirrorFlag)
 	startFlagSet.AddFlag(cmdUtil.AddOnEnvFlag)
 	startFlagSet.String(configCmd.OpenshiftVersion.Name, version.GetOpenShiftVersion(), fmt.Sprintf("The OpenShift version to run, eg. %s", version.GetOpenShiftVersion()))
+	startFlagSet.String(configCmd.IP.Name, "", "Specify IP address of the host to provision OpenShift")
+	startFlagSet.String(configCmd.SSHKeyToConnect.Name, "", "Specify path to the RSA public key of the host to provision OpenShift")
+	startFlagSet.String(configCmd.SSHUser.Name, "", "Specify user name to login in the host to provision OpenShift")
 
 	if runtime.GOOS == "windows" {
 		startFlagSet.String(configCmd.NetworkDevice.Name, "", "Specify the network device to use for the IP address. Ignored if no IP address specified (Hyper-V only)")
@@ -744,4 +750,12 @@ func cacheMinishiftISO(config *cluster.MachineConfig) {
 // if skip-startup-checks set to true then return true and skip preflight checks
 func shouldPreflightChecksBeSkipped() bool {
 	return viper.GetBool(configCmd.SkipPreflightChecks.Name)
+}
+
+func getIPAddress(driver drivers.Driver) string {
+	if viper.GetString(configCmd.VmDriver.Name) == "generic" {
+		return viper.GetString(configCmd.IP.Name)
+	}
+	ip, _ := driver.GetIP()
+	return ip
 }
